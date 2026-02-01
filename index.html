@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Valentine's Day 💗</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Varela+Round&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #ff5a8a;
+      --pink-dark: #ff3f79;
+      --soft-pink: #ffd1dc;
+      --soft-pink-2: #ffe4ec;
+      --card-shadow: 0 16px 40px rgba(255, 90, 138, 0.22);
+      --text: #3b2b30;
+      --muted: #8a7b82;
+      --gray: #e6e6e9;
+      --gray-dark: #cfcfd6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(140deg, var(--soft-pink) 0%, var(--soft-pink-2) 50%, #fff0f5 100%);
+      font-family: "Varela Round", system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .card {
+      width: min(92vw, 420px);
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: var(--card-shadow);
+      padding: 22px 20px 24px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 2px solid #ffe7ef;
+      display: block;
+    }
+
+    .title {
+      margin: 18px 0 16px;
+      font-size: 28px;
+      line-height: 1.2;
+      font-family: "Pacifico", "Varela Round", cursive;
+      font-weight: 400;
+    }
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 54px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 16px;
+      font-family: "Varela Round", system-ui, -apple-system, sans-serif;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+      outline: none;
+    }
+
+    .btn:focus-visible {
+      box-shadow: 0 0 0 3px rgba(255, 90, 138, 0.35), 0 8px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .btn-yes {
+      background: var(--pink);
+      color: #fff;
+      font-size: 18px;
+      padding: 16px 28px;
+      animation: pulse 1.6s infinite;
+    }
+
+    .btn-yes:hover { background: var(--pink-dark); transform: translateY(-1px); }
+
+    .btn-no {
+      background: var(--gray);
+      color: #5b5560;
+      padding: 12px 20px;
+      position: relative; /* Detach to fixed via JS after layout */
+    }
+
+    .btn-no:hover { background: var(--gray-dark); }
+
+    .btn-no.detached {
+      position: fixed;
+      z-index: 10;
+    }
+
+    .btn-no.pop {
+      transform: scale(1.08);
+    }
+
+    .no-placeholder {
+      display: none;
+      visibility: hidden;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 8px 16px rgba(255, 90, 138, 0.25); }
+      50% { transform: scale(1.05); box-shadow: 0 12px 22px rgba(255, 90, 138, 0.35); }
+      100% { transform: scale(1); box-shadow: 0 8px 16px rgba(255, 90, 138, 0.25); }
+    }
+
+    /* Confetti hearts */
+    #confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 18px;
+      opacity: 0;
+      animation: floatDown 2.6s ease-in forwards;
+      filter: drop-shadow(0 3px 6px rgba(255, 90, 138, 0.2));
+    }
+
+    @keyframes floatDown {
+      0% { transform: translateY(-20px) scale(0.9); opacity: 0; }
+      15% { opacity: 1; }
+      100% { transform: translateY(120vh) scale(1.05); opacity: 0; }
+    }
+
+    @media (max-width: 420px) {
+      .title { font-size: 24px; }
+      .hero-img { height: 190px; }
+      .btn-yes { font-size: 17px; padding: 14px 24px; }
+      .btn-no { padding: 11px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <!--
+    Single-file Valentine's Day card with a GIF swap, pulsing Yes button, and playful confetti.
+    The No button is detached after layout so it can teleport within the viewport without breaking the card layout.
+  -->
+  <main class="card" role="main">
+    <img
+      id="heroImg"
+      class="hero-img"
+      src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGF5bmZyNzB6djE3dGppbHc3dWY5ajA1b2VyY2Y4bHI3dWtwZCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/1wQMGhXUrEUFxORjm0/giphy.gif"
+      alt="Cute heart animation"
+    />
+
+    <h1 id="title" class="title">Will you be my Valentine?</h1>
+
+    <div class="buttons" aria-label="Valentine buttons">
+      <button id="yesBtn" class="btn btn-yes" type="button">Yes</button>
+      <span id="noPlaceholder" class="no-placeholder" aria-hidden="true"></span>
+      <button id="noBtn" class="btn btn-no" type="button">No</button>
+    </div>
+  </main>
+
+  <div id="confetti" aria-hidden="true"></div>
+
+  <script>
+    // Elements
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const title = document.getElementById("title");
+    const heroImg = document.getElementById("heroImg");
+    const noPlaceholder = document.getElementById("noPlaceholder");
+    const confetti = document.getElementById("confetti");
+
+    const placeholderSrc = heroImg.src;
+    const celebratorySrc = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGF5bmZyNzB6djE3dGppbHc3dWY5ajA1b2VyY2Y4bHI3dWtwZCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3o6Zt481isNVuQI1l6/giphy.gif";
+
+    // Detach the "No" button after layout to keep the row aligned
+    function detachNoButton() {
+      const rect = noBtn.getBoundingClientRect();
+      noPlaceholder.style.width = `${rect.width}px`;
+      noPlaceholder.style.height = `${rect.height}px`;
+      noPlaceholder.style.display = "inline-block";
+
+      noBtn.classList.add("detached");
+      noBtn.style.left = `${rect.left}px`;
+      noBtn.style.top = `${rect.top}px`;
+      noBtn.style.width = `${rect.width}px`;
+    }
+
+    function moveNoButton() {
+      const padding = 16;
+      const rect = noBtn.getBoundingClientRect();
+      const maxX = Math.max(padding, window.innerWidth - rect.width - padding);
+      const maxY = Math.max(padding, window.innerHeight - rect.height - padding);
+
+      const x = maxX === padding ? padding : padding + Math.random() * (maxX - padding);
+      const y = maxY === padding ? padding : padding + Math.random() * (maxY - padding);
+
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+
+      // Quick pop effect
+      noBtn.classList.remove("pop");
+      void noBtn.offsetWidth;
+      noBtn.classList.add("pop");
+    }
+
+    function clampNoButton() {
+      const padding = 16;
+      const rect = noBtn.getBoundingClientRect();
+      let left = rect.left;
+      let top = rect.top;
+
+      const maxX = Math.max(padding, window.innerWidth - rect.width - padding);
+      const maxY = Math.max(padding, window.innerHeight - rect.height - padding);
+
+      left = Math.min(Math.max(padding, left), maxX);
+      top = Math.min(Math.max(padding, top), maxY);
+
+      noBtn.style.left = `${left}px`;
+      noBtn.style.top = `${top}px`;
+    }
+
+    function launchConfetti() {
+      confetti.innerHTML = "";
+      const hearts = ["💗", "✨", "💗", "💗", "✨"];
+      for (let i = 0; i < 16; i += 1) {
+        const heart = document.createElement("span");
+        heart.className = "heart";
+        heart.textContent = hearts[i % hearts.length];
+        heart.style.left = `${Math.random() * 100}vw`;
+        heart.style.animationDelay = `${Math.random() * 0.6}s`;
+        heart.style.fontSize = `${14 + Math.random() * 12}px`;
+        confetti.appendChild(heart);
+      }
+    }
+
+    // YES button behavior
+    yesBtn.addEventListener("click", () => {
+      title.textContent = "YAY!";
+      heroImg.src = celebratorySrc;
+      heroImg.alt = "Celebratory animation";
+      launchConfetti();
+    });
+
+    // NO button behavior
+    ["mouseenter", "touchstart", "focus"].forEach((evt) => {
+      noBtn.addEventListener(evt, (e) => {
+        if (evt === "touchstart") e.preventDefault();
+        moveNoButton();
+      }, { passive: false });
+    });
+
+    window.addEventListener("resize", clampNoButton);
+
+    window.addEventListener("load", () => {
+      detachNoButton();
+      // If fonts shift sizes, re-clamp after a tiny delay
+      setTimeout(clampNoButton, 300);
+    });
+  </script>
+
+  <!--
+    GitHub Pages checklist:
+    - Create repo
+    - Upload index.html
+    - Enable GitHub Pages
+    - Result URL format: https://<username>.github.io/<repo-name>/
+  -->
+</body>
+</html>
